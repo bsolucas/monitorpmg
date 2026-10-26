@@ -194,12 +194,32 @@ def esxi():
     return hosts
 
 
+def mesclar_vms(d):
+    """Põe as VMs do VMware na lista de servidores: as que o Zabbix já monitora ganham o host ESXi
+    (e ficam 'fora' se estiverem desligadas); as demais entram com CPU/RAM do vCenter."""
+    por_nome = {v['nome'].split(' ')[0].upper(): v for v in d['vms']}
+    for h in d['esxi']:
+        for vm in h.pop('vms', []):
+            atual = por_nome.get(vm['nome'].upper())
+            if atual:
+                atual['host'] = h['nome']
+                if vm['estado'] == 'fora':
+                    atual['estado'] = 'fora'
+                    atual['desligada'] = True
+            else:
+                novo = {'nome': vm['nome'], 'estado': vm['estado'], 'host': h['nome'], **({'desligada': True} if vm['estado'] == 'fora' else {})}
+                novo.update({k: vm[k] for k in ('cpu', 'ram') if k in vm})
+                d['vms'].append(novo)
+    d['vms'].sort(key=lambda x: ({'fora': 0, 'parcial': 1, 'ok': 2}[x['estado']], x['nome']))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out')
     ap.add_argument('--post')
     a = ap.parse_args()
     d = coletar(os.environ['ZBX_URL'], os.environ['ZBX_USER'], os.environ['ZBX_PASS'])
+    mesclar_vms(d)
     txt = json.dumps(d, ensure_ascii=False, separators=(',', ':'))
     if a.out:
         open(a.out, 'w').write(txt)

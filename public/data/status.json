@@ -2,84 +2,125 @@
  "gerado_em": "2026-10-26T14:10:51Z",
  "vms": [
   {
+   "nome": "SRVDBSELLER01",
+   "estado": "ok",
+   "cpu": 0,
+   "disco": 75,
+   "ram": 13
+  },
+  {
+   "nome": "SRVLMDR01",
+   "estado": "ok",
+   "host": "SRVVM03",
+   "cpu": 13,
+   "ram": 33
+  },
+  {
+   "nome": "SRVLMGR01",
+   "estado": "ok",
+   "host": "SRVVM02",
+   "cpu": 1,
+   "ram": 5
+  },
+  {
    "nome": "SRVMAIL01",
-   "funcao": "Zimbra (e-mail)",
-   "estado": "ok",
-   "cpu": 34,
-   "ram": 71,
-   "disco": 86
-  },
-  {
-   "nome": "SRVWDC01",
-   "funcao": "Controlador de domínio",
-   "estado": "ok",
-   "cpu": 8,
-   "ram": 42,
-   "disco": 38
-  },
-  {
-   "nome": "SRVWDC02",
-   "funcao": "Controlador de domínio / DHCP visitantes",
-   "estado": "ok",
-   "cpu": 11,
-   "ram": 45,
-   "disco": 41
-  },
-  {
-   "nome": "SRVWDC03",
-   "funcao": "Controlador de domínio",
    "estado": "ok",
    "cpu": 6,
-   "ram": 39,
-   "disco": 35
-  },
-  {
-   "nome": "SRVWDESK",
-   "funcao": "RustDesk",
-   "estado": "ok",
-   "cpu": 5,
-   "ram": 28,
-   "disco": 22
-  },
-  {
-   "nome": "SRVWTVM",
-   "funcao": "Portal Acesso Guaíba",
-   "estado": "ok",
-   "cpu": 4,
-   "ram": 14,
-   "disco": 5
-  },
-  {
-   "nome": "SRVWESUS",
-   "funcao": "Atualizações Windows",
-   "estado": "ok",
-   "cpu": 9,
-   "ram": 52,
-   "disco": 61
-  },
-  {
-   "nome": "SRVSAUDE01",
-   "funcao": "Sistema de Saúde",
-   "estado": "parcial",
-   "cpu": 78,
-   "ram": 83,
-   "disco": 74
-  },
-  {
-   "nome": "SRVWWEB",
-   "funcao": "Servidores web",
-   "estado": "ok",
-   "cpu": 17,
-   "ram": 47,
-   "disco": 52
+   "disco": 85,
+   "ram": 72
   },
   {
    "nome": "SRVPACS01",
-   "funcao": "Imagens PACS",
-   "estado": "fora",
+   "estado": "ok",
+   "cpu": 4,
+   "disco": 51,
+   "ram": 61
+  },
+  {
+   "nome": "SRVSAUDE01",
+   "estado": "ok",
+   "cpu": 1,
+   "disco": 48,
+   "ram": 43
+  },
+  {
+   "nome": "SRVVC01",
+   "estado": "ok",
+   "host": "SRVVM02",
+   "cpu": 21,
+   "ram": 12
+  },
+  {
+   "nome": "SRVWBKP",
+   "estado": "ok",
+   "cpu": 10,
+   "disco": 76,
+   "ram": 64,
+   "host": "SRVVM01"
+  },
+  {
+   "nome": "SRVWCLAUDE",
+   "estado": "ok",
+   "host": "SRVVM01",
+   "cpu": 7,
+   "ram": 40
+  },
+  {
+   "nome": "SRVWDC01",
+   "estado": "ok",
+   "host": "SRVVM02",
+   "cpu": 12,
+   "ram": 23
+  },
+  {
+   "nome": "SRVWDC02",
+   "estado": "ok",
+   "host": "SRVVM03",
+   "cpu": 10,
+   "ram": 29
+  },
+  {
+   "nome": "SRVWDESK (RustDesk)",
+   "estado": "ok",
    "cpu": 0,
-   "ram": 0,
-   "disco": 0
+   "disco": 54,
+   "ram": 30
+  },
+  {
+   "nome": "SRVWFS01",
+   "estado": "ok",
+   "cpu": 16,
+   "disco": 74,
+   "ram": 66,
+   "host": "SRVVM03"
+  },
+  {
+   "nome": "SRVWGEOH01",
+   "estado": "ok",
+   "host": "SRVVM01",
+   "cpu": 2,
+   "ram": 25
+  },
+  {
+   "nome": "SRVWMGR01",
+   "estado": "ok",
+   "host": "SRVVM01",
+   "cpu": 6,
+   "ram": 15
+  },
+  {
+   "nome": "SRVWTVM",
+   "estado": "ok",
+   "host": "SRVVM01",
+   "cpu": 0,
+   "ram": 1
+  },
+  {
+   "nome": "SRVWWEB",
+   "estado": "ok",
+   "cpu": 5,
+   "disco": 76,
+   "ram": 63
   }
  ],
  "sistemas": [
@@ -385,48 +426,6 @@
      "valor": 20,
      "estado": "Green"
     }
-   ],
-   "vms": [
-    {
-     "nome": "SRVWBKP",
-     "estado": "ok",
-     "vcpu": 8,
-     "ram_gb": 16,
-     "ram": 24,
-     "cpu": 8
-    },
-    {
-     "nome": "SRVWCLAUDE",
-     "estado": "ok",
-     "vcpu": 2,
-     "ram_gb": 4,
-     "ram": 37,
-     "cpu": 4
-    },
-    {
-     "nome": "SRVWGEOH01",
-     "estado": "ok",
-     "vcpu": 4,
-     "ram_gb": 8,
-     "ram": 28,
-     "cpu": 3
-    },
-    {
-     "nome": "SRVWMGR01",
-     "estado": "ok",
-     "vcpu": 8,
-     "ram_gb": 16,
-     "ram": 18,
-     "cpu": 1
-    },
-    {
-     "nome": "SRVWTVM",
-     "estado": "ok",
-     "vcpu": 2,
-     "ram_gb": 4,
-     "ram": 1,
-     "cpu": 0
-    }
    ]
   },
   {
@@ -487,32 +486,6 @@
      "valor": 32,
      "estado": "Green"
     }
-   ],
-   "vms": [
-    {
-     "nome": "SRVLMGR01",
-     "estado": "ok",
-     "vcpu": 4,
-     "ram_gb": 6,
-     "ram": 7,
-     "cpu": 1
-    },
-    {
-     "nome": "SRVVC01",
-     "estado": "ok",
-     "vcpu": 2,
-     "ram_gb": 16,
-     "ram": 19,
-     "cpu": 9
-    },
-    {
-     "nome": "SRVWDC01",
-     "estado": "ok",
-     "vcpu": 4,
-     "ram_gb": 12,
-     "ram": 28,
-     "cpu": 11
-    }
    ]
   },
   {
@@ -572,32 +545,6 @@
      "nome": "Ambiente Temp",
      "valor": 18,
      "estado": "Green"
-    }
-   ],
-   "vms": [
-    {
-     "nome": "SRVLMDR01",
-     "estado": "ok",
-     "vcpu": 8,
-     "ram_gb": 12,
-     "ram": 29,
-     "cpu": 13
-    },
-    {
-     "nome": "SRVWDC02",
-     "estado": "ok",
-     "vcpu": 4,
-     "ram_gb": 12,
-     "ram": 22,
-     "cpu": 9
-    },
-    {
-     "nome": "SRVWFS01",
-     "estado": "ok",
-     "vcpu": 8,
-     "ram_gb": 16,
-     "ram": 18,
-     "cpu": 3
     }
    ]
   }
