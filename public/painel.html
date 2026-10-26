@@ -3,10 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1020">
+  <meta name="theme-color" content="#0a0f1f">
   <meta name="robots" content="noindex, nofollow">
   <title>Painel de Status · Guaíba</title>
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Status">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -17,6 +22,7 @@
       <strong>Painel de Status</strong>
     </div>
     <div class="top-right">
+      <button type="button" class="btn instalar" data-instalar hidden>Instalar</button>
       <span id="atualizado" class="pill">carregando…</span>
       <button id="sair" class="btn ghost" type="button">Sair</button>
     </div>
@@ -60,6 +66,7 @@
     <footer class="foot">Atualização automática a cada 60 s</footer>
   </main>
 
+  <script src="js/pwa.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
 </body>

@@ -132,3 +132,15 @@ input:not([type]),input[type=password]{width:100%;padding:11px 14px;border-radiu
   .lista-cards{grid-template-columns:1fr}
   .acc>summary{padding:14px}
 }
+
+/* instalar app */
+.btn.instalar{padding:6px 12px;font-size:13px;background:transparent;border:1px solid var(--brand);color:var(--brand)}
+.login-card .btn.instalar{padding:11px 18px;font-size:inherit;border-color:var(--line);color:var(--muted)}
+dialog#dica-instalar{border:1px solid var(--line);border-radius:var(--r);background:var(--card);color:var(--txt);padding:22px;width:min(380px,calc(100% - 32px))}
+dialog#dica-instalar::backdrop{background:#000a}
+dialog#dica-instalar h3{margin-bottom:10px}
+dialog#dica-instalar ol{margin:0 0 14px;padding-left:20px;display:grid;gap:8px}
+dialog#dica-instalar .btn{width:100%}
+@media (max-width:640px){.pill{display:none}}
+.brand.sm strong,.btn.instalar,.btn.ghost{white-space:nowrap}
+@media (max-width:400px){.brand.sm strong{font-size:15px}.brand.sm img{width:26px;height:26px}.top-right{gap:6px}}
