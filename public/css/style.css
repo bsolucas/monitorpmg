@@ -58,7 +58,9 @@ h2.sep{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--
 .itens span{flex:1;min-width:0;overflow-wrap:anywhere}
 .itens time,.rows time{color:var(--muted);font-size:12.5px;white-space:nowrap}
 .itens time::before,.rows time::before{content:"há "}
-.ic{font-style:normal;font-size:16px;width:22px;text-align:center;flex:none}
+.glow{background:var(--fora);box-shadow:0 0 0 3px #fb5b6b30,0 0 10px 2px var(--fora);animation:brilho 1.8s ease-in-out infinite}
+@keyframes brilho{50%{box-shadow:0 0 0 5px #fb5b6b18,0 0 16px 4px var(--fora)}}
+@media (prefers-reduced-motion:reduce){.glow{animation:none}}
 .vazio{padding:26px;text-align:center;color:var(--ok);font-weight:700;font-size:16px}
 
 /* listas que abrem */

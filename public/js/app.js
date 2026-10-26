@@ -45,12 +45,14 @@ function render() {
 
   // ---- unidades com problema
   $('#prob-n').textContent = fora.length + parc.length || '';
+  const luz = '<i class="dot fora glow"></i>';
   const cartao = u => `
     <article class="card un ${u.estado}">
       <header><h3>${esc(u.nome)}</h3><span class="tag ${u.estado}">${u.estado === 'fora' ? 'Sem link' : 'Parcial'}</span></header>
       <ul class="itens">
-        ${u.mikrotik.estado === 'fora' ? `<li><i class="ic">📡</i><span><b>Mikrotik</b> sem link</span><time>${desde(u.mikrotik.desde)}</time></li>` : ''}
-        ${u.equipamentos_fora.map(e => `<li><i class="ic">${e.tipo === 'Switch' ? '🔀' : '📶'}</i><span><b>${esc(e.tipo)}</b> ${esc(e.nome)}</span><time>${desde(e.desde)}</time></li>`).join('')}
+        ${u.estado === 'fora'
+          ? `<li>${luz}<span><b>Mikrotik</b> sem link</span><time>${desde(u.mikrotik.desde)}</time></li>`
+          : u.equipamentos_fora.map(e => `<li>${luz}<span><b>${esc(e.tipo)}</b> ${esc(e.nome)}</span><time>${desde(e.desde)}</time></li>`).join('')}
       </ul>
     </article>`;
   $('#prob').innerHTML = tudoOk ? '<div class="card vazio">✓ Todas as unidades estão no ar</div>' : [...fora, ...parc].map(cartao).join('');
@@ -68,7 +70,7 @@ function render() {
   $('#equip-body').innerHTML = `
     <div class="caixas">${caixa('Switches TP-Link', r.switches)}${caixa('APs TP-Link', r.aps)}${caixa('APs Ubiquiti', r.ubiquiti)}</div>
     <h4>Equipamentos fora</h4>
-    ${eqFora.length ? `<ul class="rows">${eqFora.map(e => `<li><i class="ic">${e.tipo === 'Switch' ? '🔀' : '📶'}</i>
+    ${eqFora.length ? `<ul class="rows">${eqFora.map(e => `<li><i class="dot fora glow"></i>
       <span class="r-t"><b>${esc(e.nome)}</b><small>${esc(e.unidade)}</small></span><time>${desde(e.desde)}</time></li>`).join('')}</ul>`
       : '<p class="muted">Nenhum equipamento fora.</p>'}`;
 
