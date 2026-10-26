@@ -1,97 +1,108 @@
 const $ = (s, r = document) => r.querySelector(s);
 const ESTADO = { ok: 'No ar', parcial: 'Parcial', fora: 'Fora' };
-const ICO = { ok: '●', parcial: '▲', fora: '✕' };
 let dados = null;
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const badge = st => `<span class="badge ${st}">${ICO[st]} ${ESTADO[st]}</span>`;
-const chip = (n, st, txt) => `<span class="mini ${st}${n ? '' : ' zero'}">${n} ${txt}</span>`;
+const mini = (n, st, txt) => `<span class="mini ${st}${n ? '' : ' zero'}">${n} ${txt}</span>`;
 
 function desde(iso) {
   if (!iso) return '';
   const m = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000));
-  if (m < 60) return `há ${m} min`;
+  if (m < 60) return `${m} min`;
   const h = Math.floor(m / 60);
-  return h < 24 ? `há ${h} h ${m % 60} min` : `há ${Math.floor(h / 24)} d`;
+  return h < 24 ? `${h} h ${m % 60} min` : `${Math.floor(h / 24)} d`;
 }
 
-function kpi(rotulo, valor, sub, tom) {
-  return `<div class="card kpi ${tom || ''}"><span>${esc(rotulo)}</span><b>${esc(valor)}</b><small>${esc(sub || '')}</small></div>`;
-}
-
-function cartaoServidor(v) {
-  return `
-    <article class="card item ${v.estado}">
-      <header><h3>${esc(v.nome)}</h3>${badge(v.estado)}</header>
-      ${v.funcao ? `<p class="muted">${esc(v.funcao)}</p>` : ''}
-      ${v.estado === 'fora' ? '<small class="muted">sem resposta</small>' : `
-      <div class="meters">${[['CPU', v.cpu], ['RAM', v.ram], ['Disco', v.disco]].filter(m => m[1] != null)
-        .map(m => `<label>${m[0]} <i style="--p:${m[1]}"></i><em>${m[1]}%</em></label>`).join('')}</div>`}
-    </article>`;
-}
-
-function grupo(titulo, st, lista, html) {
-  if (!lista.length) return '';
-  return `<h3 class="grp ${st}">${titulo} <span>${lista.length}</span></h3><div class="grid">${lista.map(html).join('')}</div>`;
+function anel(ok, parcial, fora, total) {
+  const R = 52, C = 2 * Math.PI * R, seg = (n, off, cor) =>
+    n ? `<circle cx="64" cy="64" r="${R}" fill="none" stroke="${cor}" stroke-width="13" stroke-dasharray="${(n / total) * C} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 64 64)"/>` : '';
+  const a = (ok / total) * C, b = (parcial / total) * C;
+  return `<svg viewBox="0 0 128 128" class="anel" role="img" aria-label="${ok} de ${total} unidades no ar">
+    <circle cx="64" cy="64" r="${R}" fill="none" stroke="var(--line)" stroke-width="13"/>
+    ${seg(ok, 0, 'var(--ok)')}${seg(parcial, a, 'var(--parcial)')}${seg(fora, a + b, 'var(--fora)')}
+    <text x="64" y="62" text-anchor="middle" class="anel-n">${ok}</text>
+    <text x="64" y="82" text-anchor="middle" class="anel-t">de ${total}</text></svg>`;
 }
 
 function render() {
-  const d = dados, r = d.rede;
-  const srvOk = d.vms.filter(v => v.estado === 'ok'), srvPar = d.vms.filter(v => v.estado === 'parcial'), srvFora = d.vms.filter(v => v.estado === 'fora');
-  const sisProb = d.sistemas.filter(s => s.estado !== 'ok');
-  const uniProb = d.unidades.filter(u => u.estado !== 'ok');
-  const uniFora = d.unidades.filter(u => u.estado === 'fora').length;
-  const redeFora = r.switches.fora + r.aps.fora + r.ubiquiti.fora;
+  const d = dados, un = d.unidades, total = un.length;
+  const fora = un.filter(u => u.estado === 'fora'), parc = un.filter(u => u.estado === 'parcial'), ok = un.filter(u => u.estado === 'ok');
+  const tudoOk = !fora.length && !parc.length;
 
-  $('#kpis').innerHTML =
-    kpi('Unidades com problema', uniProb.length, `${uniFora} sem link · de ${d.unidades.length}`, uniProb.length ? 'fora' : 'ok') +
-    kpi('Servidores no ar', `${srvOk.length + srvPar.length}/${d.vms.length}`, `${srvFora.length} fora`, srvFora.length ? 'fora' : 'ok') +
-    kpi('Sistemas com problema', sisProb.length, `de ${d.sistemas.length} monitorados`, sisProb.length ? 'parcial' : 'ok') +
-    kpi('Equipamentos fora', redeFora, 'switches e APs', redeFora ? 'parcial' : 'ok');
+  // ---- resumo
+  $('#hero').className = 'hero card ' + (fora.length ? 'fora' : parc.length ? 'parcial' : 'ok');
+  $('#hero').innerHTML = `
+    ${anel(ok.length, parc.length, fora.length, total)}
+    <div class="hero-txt">
+      <h1>${tudoOk ? 'Tudo operacional' : fora.length ? `${fora.length} ${fora.length === 1 ? 'unidade sem link' : 'unidades sem link'}` : `${parc.length} com equipamento fora`}</h1>
+      <p>${ok.length} de ${total} unidades no ar</p>
+      <div class="stats">
+        <span class="stat fora"><b>${fora.length}</b>sem link</span>
+        <span class="stat parcial"><b>${parc.length}</b>parcial</span>
+        <span class="stat ok"><b>${ok.length}</b>no ar</span>
+      </div>
+    </div>`;
 
-  // Unidades: sempre aberta, só o que está fora
-  $('#uni-res').innerHTML = chip(uniFora, 'fora', 'sem link') + chip(uniProb.length - uniFora, 'parcial', 'parcial');
-  $('#uni-body').innerHTML = uniProb.length ? `<div class="grid">${uniProb.map(u => `
-    <article class="card item ${u.estado}">
-      <header><h3>${esc(u.nome)}</h3>${badge(u.estado)}</header>
-      <ul class="lista">
-        ${u.mikrotik.estado === 'fora' ? `<li><b>Mikrotik</b> sem link <small>${desde(u.mikrotik.desde)}</small></li>` : ''}
-        ${u.equipamentos_fora.map(e => `<li><b>${esc(e.tipo)}</b> ${esc(e.nome)} <small>${desde(e.desde)}</small></li>`).join('')}
+  // ---- unidades com problema
+  $('#prob-n').textContent = fora.length + parc.length || '';
+  const cartao = u => `
+    <article class="card un ${u.estado}">
+      <header><h3>${esc(u.nome)}</h3><span class="tag ${u.estado}">${u.estado === 'fora' ? 'Sem link' : 'Parcial'}</span></header>
+      <ul class="itens">
+        ${u.mikrotik.estado === 'fora' ? `<li><i class="ic">📡</i><span><b>Mikrotik</b> sem link</span><time>${desde(u.mikrotik.desde)}</time></li>` : ''}
+        ${u.equipamentos_fora.map(e => `<li><i class="ic">${e.tipo === 'Switch' ? '🔀' : '📶'}</i><span><b>${esc(e.tipo)}</b> ${esc(e.nome)}</span><time>${desde(e.desde)}</time></li>`).join('')}
       </ul>
-    </article>`).join('')}</div>`
-    : '<div class="card vazio">✓ Todas as unidades estão no ar</div>';
-
-  // Servidores
-  $('#srv-res').innerHTML = chip(srvOk.length, 'ok', 'no ar') + chip(srvPar.length, 'parcial', 'alerta') + chip(srvFora.length, 'fora', 'fora');
-  $('#srv-body').innerHTML =
-    grupo('Fora', 'fora', srvFora, cartaoServidor) + grupo('Com alerta', 'parcial', srvPar, cartaoServidor) + grupo('No ar', 'ok', srvOk, cartaoServidor);
-
-  // Sistemas
-  $('#sis-res').innerHTML = chip(d.sistemas.length - sisProb.length, 'ok', 'ok') + chip(sisProb.length, sisProb.length ? 'parcial' : 'ok', 'com problema');
-  $('#sis-grid').innerHTML = d.sistemas.map(s => `
-    <article class="card item ${s.estado}">
-      <header><h3>${esc(s.nome)}</h3>${badge(s.estado)}</header>
-      <p class="muted">${esc(s.detalhe)}</p>
-      <small class="muted">${s.latencia_ms != null ? `${s.latencia_ms} ms` : 'sem resposta'}${s.desde ? ' · ' + desde(s.desde) : ''}</small>
-    </article>`).join('');
-
-  // Rede
-  $('#rede-res').innerHTML = chip(redeFora, redeFora ? 'parcial' : 'ok', 'fora');
-  const linha = (t, o) => `
-    <article class="card item ${o.fora ? 'parcial' : 'ok'}">
-      <header><h3>${t}</h3>${badge(o.fora ? 'parcial' : 'ok')}</header>
-      <div class="big"><b>${o.on}</b><span>/ ${o.total} no ar</span></div>
-      <small class="muted">${o.fora} fora</small>
     </article>`;
-  $('#rede-grid').innerHTML = linha('Switches TP-Link', r.switches) + linha('APs TP-Link', r.aps) + linha('APs Ubiquiti', r.ubiquiti);
+  $('#prob').innerHTML = tudoOk ? '<div class="card vazio">✓ Todas as unidades estão no ar</div>' : [...fora, ...parc].map(cartao).join('');
 
-  const idade = (Date.now() - new Date(d.gerado_em)) / 60000;
-  const p = $('#atualizado');
-  p.textContent = idade < 1 ? 'atualizado agora' : `atualizado ${desde(d.gerado_em)}`;
+  // ---- todas as unidades
+  $('#todas-res').innerHTML = mini(ok.length, 'ok', 'no ar') + mini(parc.length, 'parcial', 'parcial') + mini(fora.length, 'fora', 'fora');
+  tiles();
+
+  // ---- equipamentos
+  const r = d.rede, eqFora = un.flatMap(u => u.equipamentos_fora.map(e => ({ ...e, unidade: u.nome })))
+    .sort((a, b) => new Date(a.desde) - new Date(b.desde));
+  const nfora = r.switches.fora + r.aps.fora + r.ubiquiti.fora;
+  $('#equip-res').innerHTML = mini(nfora, nfora ? 'parcial' : 'ok', 'fora');
+  const caixa = (t, o) => `<div class="caixa"><span>${t}</span><b>${o.on}<small>/${o.total}</small></b><em class="${o.fora ? 'parcial' : 'ok'}">${o.fora ? o.fora + ' fora' : 'todos no ar'}</em></div>`;
+  $('#equip-body').innerHTML = `
+    <div class="caixas">${caixa('Switches TP-Link', r.switches)}${caixa('APs TP-Link', r.aps)}${caixa('APs Ubiquiti', r.ubiquiti)}</div>
+    <h4>Equipamentos fora</h4>
+    ${eqFora.length ? `<ul class="rows">${eqFora.map(e => `<li><i class="ic">${e.tipo === 'Switch' ? '🔀' : '📶'}</i>
+      <span class="r-t"><b>${esc(e.nome)}</b><small>${esc(e.unidade)}</small></span><time>${desde(e.desde)}</time></li>`).join('')}</ul>`
+      : '<p class="muted">Nenhum equipamento fora.</p>'}`;
+
+  // ---- servidores
+  const sv = d.vms, sOk = sv.filter(v => v.estado === 'ok').length, sFora = sv.filter(v => v.estado === 'fora').length, sPar = sv.length - sOk - sFora;
+  $('#srv-res').innerHTML = mini(sOk, 'ok', 'no ar') + (sPar ? mini(sPar, 'parcial', 'alerta') : '') + mini(sFora, 'fora', 'fora');
+  const barra = (n, v) => v == null ? '' : `<span class="bar" title="${n} ${v}%"><i style="--p:${v}"></i><em>${n} ${v}%</em></span>`;
+  $('#srv-body').innerHTML = `<ul class="rows">${sv.map(v => `
+    <li class="${v.estado}"><i class="dot ${v.estado}"></i>
+      <span class="r-t"><b>${esc(v.nome)}</b>${v.estado === 'fora' ? '<small>sem resposta</small>' : ''}</span>
+      <span class="barras">${v.estado === 'fora' ? '' : barra('CPU', v.cpu) + barra('RAM', v.ram) + barra('Disco', v.disco)}</span></li>`).join('')}</ul>`;
+
+  // ---- sistemas
+  const ss = d.sistemas, sProb = ss.filter(s => s.estado !== 'ok').length;
+  $('#sis-res').innerHTML = mini(ss.length - sProb, 'ok', 'ok') + (sProb ? mini(sProb, 'parcial', 'com problema') : '');
+  $('#sis-body').innerHTML = `<ul class="rows">${ss.map(s => `
+    <li class="${s.estado}"><i class="dot ${s.estado}"></i>
+      <span class="r-t"><b>${esc(s.nome)}</b><small>${esc(s.detalhe || '')}</small></span>
+      <span class="tag ${s.estado}">${ESTADO[s.estado]}</span></li>`).join('')}</ul>`;
+
+  // ---- topo
+  const idade = (Date.now() - new Date(d.gerado_em)) / 60000, p = $('#atualizado');
+  p.textContent = idade < 1 ? 'atualizado agora' : `há ${desde(d.gerado_em)}`;
   p.className = 'pill' + (idade > 10 ? ' velho' : '');
-  const av = $('#aviso');
-  av.hidden = idade <= 10;
+  const av = $('#aviso'); av.hidden = idade <= 10;
   av.textContent = `Atenção: os dados têm ${Math.round(idade)} min. O envio da rede interna pode estar parado.`;
+}
+
+function tiles() {
+  const q = $('#busca').value.trim().toLowerCase();
+  const ordem = { fora: 0, parcial: 1, ok: 2 };
+  const l = dados.unidades.filter(u => u.nome.toLowerCase().includes(q)).sort((a, b) => ordem[a.estado] - ordem[b.estado] || a.nome.localeCompare(b.nome));
+  $('#tiles').innerHTML = l.length ? l.map(u => `<span class="tile ${u.estado}" title="${ESTADO[u.estado]}"><i class="dot ${u.estado}"></i>${esc(u.nome)}</span>`).join('')
+    : '<p class="muted">Nenhuma unidade encontrada.</p>';
 }
 
 async function carregar() {
@@ -111,21 +122,16 @@ async function carregar() {
   }
 }
 
-// lembra quais seções o usuário deixou abertas
-const lembrar = (k, v) => { try { v === undefined ? localStorage.getItem('painel.' + k) : localStorage.setItem('painel.' + k, v); } catch (e) {} };
+// lembra quais listas ficaram abertas (a lista de unidades abre sozinha em tela grande)
 const lido = k => { try { return localStorage.getItem('painel.' + k); } catch (e) { return null; } };
-document.querySelectorAll('details.sec').forEach(el => {
-  if (lido(el.dataset.k) === '1') el.open = true;
-  el.addEventListener('toggle', () => lembrar(el.dataset.k, el.open ? '1' : '0'));
+const grava = (k, v) => { try { localStorage.setItem('painel.' + k, v); } catch (e) {} };
+document.querySelectorAll('details.acc').forEach(el => {
+  const v = lido(el.dataset.k);
+  el.open = v === null ? (el.id === 'todas' && innerWidth >= 820) : v === '1';
+  el.addEventListener('toggle', () => grava(el.dataset.k, el.open ? '1' : '0'));
 });
 
-// aba abre a seção correspondente
-document.querySelectorAll('#tabs a').forEach(a => a.addEventListener('click', () => {
-  document.querySelectorAll('#tabs a').forEach(x => x.classList.toggle('on', x === a));
-  const alvo = document.querySelector(a.getAttribute('href'));
-  if (alvo && alvo.tagName === 'DETAILS') alvo.open = true;
-}));
-
+$('#busca').addEventListener('input', () => dados && tiles());
 $('#sair').addEventListener('click', Auth.sair);
 carregar();
 setInterval(carregar, 60000);

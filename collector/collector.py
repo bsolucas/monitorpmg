@@ -82,6 +82,7 @@ def coletar(url, user, pw):
                 unidades[k] = {'nome': nome, 'mikrotik': {'estado': 'ok', 'desde': None}, 'equipamentos_fora': []}
             partes = [x.strip() for x in h['name'].split(' - ')]
             rotulo = re.sub(r'\s*\d{5,}$', '', ' - '.join(partes[2:] if len(partes) > 2 else partes[1:2] or partes)).strip() or nome
+            rotulo = re.sub(r'^(AP|Switch)\s+(TP-?Link|UniFI)\s*(-\s*)?', '', re.sub(r'[\s-]+$', '', rotulo), flags=re.I).strip() or nome
             unidades[alvo]['equipamentos_fora'].append({'tipo': rot, 'nome': rotulo, 'desde': iso(fora[h['hostid']])})
     lista_un = []
     for u in sorted(unidades.values(), key=lambda x: x['nome']):

@@ -22,36 +22,39 @@
     </div>
   </header>
 
-  <nav class="tabs" id="tabs" aria-label="Seções">
-    <a href="#resumo" class="on">Resumo</a>
-    <a href="#unidades">Unidades</a>
-    <a href="#servidores">Servidores</a>
-    <a href="#sistemas">Sistemas</a>
-    <a href="#rede">Rede</a>
-  </nav>
-
   <main class="container">
     <p id="aviso" class="banner" hidden></p>
-    <section id="resumo"><div class="kpis" id="kpis"></div></section>
 
-    <section id="unidades" class="sec fixa">
-      <h2 class="sec-t"><span>Monitoramento das Unidades</span><span class="res" id="uni-res"></span></h2>
-      <div id="uni-body"></div>
+    <section class="hero card" id="hero" aria-live="polite"></section>
+
+    <section class="bloco">
+      <h2>Unidades com problema <span class="cont" id="prob-n"></span></h2>
+      <div id="prob" class="lista-cards"></div>
     </section>
 
-    <details class="sec" id="servidores" data-k="servidores">
+    <details class="acc" id="todas" data-k="todas">
+      <summary><span class="t">Todas as unidades</span><span class="res" id="todas-res"></span></summary>
+      <div class="corpo">
+        <input id="busca" type="search" placeholder="Buscar unidade…" aria-label="Buscar unidade">
+        <div id="tiles" class="tiles"></div>
+      </div>
+    </details>
+
+    <h2 class="sep">Outras listas</h2>
+
+    <details class="acc" id="equip" data-k="equip">
+      <summary><span class="t">Monitoramento de Equipamentos</span><span class="res" id="equip-res"></span></summary>
+      <div class="corpo"><div id="equip-body"></div></div>
+    </details>
+
+    <details class="acc" id="servidores" data-k="servidores">
       <summary><span class="t">Monitoramento de Servidores</span><span class="res" id="srv-res"></span></summary>
-      <div class="body" id="srv-body"></div>
+      <div class="corpo"><div id="srv-body"></div></div>
     </details>
 
-    <details class="sec" id="sistemas" data-k="sistemas">
+    <details class="acc" id="sistemas" data-k="sistemas">
       <summary><span class="t">Monitoramento de Sistemas</span><span class="res" id="sis-res"></span></summary>
-      <div class="body"><div class="grid" id="sis-grid"></div></div>
-    </details>
-
-    <details class="sec" id="rede" data-k="rede">
-      <summary><span class="t">Equipamentos de Rede</span><span class="res" id="rede-res"></span></summary>
-      <div class="body"><div class="grid" id="rede-grid"></div></div>
+      <div class="corpo"><div id="sis-body"></div></div>
     </details>
 
     <footer class="foot">Atualização automática a cada 60 s</footer>
