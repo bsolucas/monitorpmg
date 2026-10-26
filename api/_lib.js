@@ -2,7 +2,8 @@
 const crypto = require('crypto');
 
 const DURACAO = 12 * 3600; // segundos
-const assinar = v => crypto.createHmac('sha256', process.env.SESSION_SECRET).update(v).digest('hex');
+const SEGREDO = () => process.env.SESSION_SECRET || process.env.INGEST_TOKEN || 'painel-guaiba-sessao';
+const assinar = v => crypto.createHmac('sha256', SEGREDO()).update(v).digest('hex');
 const igual = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(String(b)); return x.length === y.length && crypto.timingSafeEqual(x, y); };
 
 function criarSessao() {
@@ -11,7 +12,7 @@ function criarSessao() {
 }
 function sessaoValida(req) {
   const m = /(?:^|;\s*)painel=([^;]+)/.exec(req.headers.cookie || '');
-  if (!m || !process.env.SESSION_SECRET) return false;
+  if (!m) return false;
   const [exp, sig] = decodeURIComponent(m[1]).split('.');
   return !!sig && igual(sig, assinar(exp)) && Number(exp) > Date.now() / 1000;
 }

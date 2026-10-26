@@ -19,8 +19,8 @@ Nenhuma porta da rede interna e aberta. O JSON leva so nomes e estados (sem IP/M
 ## Configurar na Vercel (Settings -> Environment Variables)
 | Variavel | Valor |
 |---|---|
-| `PAINEL_USER` / `PAINEL_PASS` | login do painel (senha forte) |
-| `SESSION_SECRET` | texto aleatorio longo (ex.: `openssl rand -hex 32`) |
+| `PAINEL_USER` / `PAINEL_PASS` | (opcional) login do painel; sem elas vale `admin` / `admin` |
+| `SESSION_SECRET` | (opcional) texto aleatorio longo |
 | `INGEST_TOKEN` | token aleatorio longo, o mesmo usado no coletor |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | criados ao adicionar Upstash Redis (Storage / Marketplace) |
 
