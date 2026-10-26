@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-10-26T13:48:03Z",
+ "gerado_em": "2026-10-26T14:10:51Z",
  "vms": [
   {
    "nome": "SRVMAIL01",
@@ -144,98 +144,169 @@
   {
    "nome": "Prefeitura Central",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "Gabinete da Prefeita",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "UBS Centro",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "UBS Colina",
    "estado": "fora",
-   "motivo": "Sem link",
-   "desde": "2026-10-26T11:26:03Z"
+   "mikrotik": {
+    "estado": "fora",
+    "desde": "2026-10-26T11:48:51Z"
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "UBS Vila Nova",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "Escola Municipal Aurora",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "Escola Municipal Horizonte",
    "estado": "parcial",
-   "motivo": "Switch fora",
-   "desde": "2026-10-26T12:51:03Z"
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": [
+    {
+     "tipo": "Switch",
+     "nome": "SW-Horizonte-02",
+     "desde": "2026-10-26T13:13:51Z"
+    },
+    {
+     "tipo": "AP",
+     "nome": "AP-Horizonte-Biblioteca",
+     "desde": "2026-10-26T13:13:51Z"
+    }
+   ]
   },
   {
    "nome": "CRAS Norte",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "CRAS Sul",
    "estado": "fora",
-   "motivo": "Link down",
-   "desde": "2026-10-26T13:25:03Z"
+   "mikrotik": {
+    "estado": "fora",
+    "desde": "2026-10-26T13:47:51Z"
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "Secretaria de Obras",
-   "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "estado": "parcial",
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": [
+    {
+     "tipo": "Switch",
+     "nome": "SW-Obras-01",
+     "desde": "2026-10-26T13:58:51Z"
+    }
+   ]
   },
   {
    "nome": "Secretaria de Educação",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "Secretaria de Saúde",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "Guarda Municipal",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "Biblioteca Municipal",
    "estado": "parcial",
-   "motivo": "AP fora",
-   "desde": "2026-10-26T08:38:03Z"
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": [
+    {
+     "tipo": "AP",
+     "nome": "AP-Biblioteca-Sala1",
+     "desde": "2026-10-26T09:00:51Z"
+    }
+   ]
   },
   {
    "nome": "Hospital Municipal",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   },
   {
    "nome": "Câmara de Vereadores",
    "estado": "ok",
-   "motivo": "",
-   "desde": null
+   "mikrotik": {
+    "estado": "ok",
+    "desde": null
+   },
+   "equipamentos_fora": []
   }
  ],
  "rede": {

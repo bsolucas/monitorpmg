@@ -24,9 +24,9 @@
 
   <nav class="tabs" id="tabs" aria-label="Seções">
     <a href="#resumo" class="on">Resumo</a>
-    <a href="#vms">VMs</a>
-    <a href="#sistemas">Sistemas</a>
     <a href="#unidades">Unidades</a>
+    <a href="#servidores">Servidores</a>
+    <a href="#sistemas">Sistemas</a>
     <a href="#rede">Rede</a>
   </nav>
 
@@ -34,34 +34,25 @@
     <p id="aviso" class="banner" hidden></p>
     <section id="resumo"><div class="kpis" id="kpis"></div></section>
 
-    <section id="vms">
-      <h2>Monitoramento de VMs <small id="vms-n"></small></h2>
-      <div class="grid" id="vms-grid"></div>
+    <section id="unidades" class="sec fixa">
+      <h2 class="sec-t"><span>Monitoramento das Unidades</span><span class="res" id="uni-res"></span></h2>
+      <div id="uni-body"></div>
     </section>
 
-    <section id="sistemas">
-      <h2>Monitoramento de Sistemas <small id="sis-n"></small></h2>
-      <div class="grid" id="sis-grid"></div>
-    </section>
+    <details class="sec" id="servidores" data-k="servidores">
+      <summary><span class="t">Monitoramento de Servidores</span><span class="res" id="srv-res"></span></summary>
+      <div class="body" id="srv-body"></div>
+    </details>
 
-    <section id="unidades">
-      <h2>Monitoramento das Unidades <small id="uni-n"></small></h2>
-      <div class="toolbar">
-        <input id="busca" type="search" placeholder="Buscar unidade…" aria-label="Buscar unidade">
-        <div class="chips" id="filtro">
-          <button class="chip on" data-f="todas">Todas</button>
-          <button class="chip" data-f="fora">Fora</button>
-          <button class="chip" data-f="parcial">Parcial</button>
-          <button class="chip" data-f="ok">No ar</button>
-        </div>
-      </div>
-      <div class="grid small" id="uni-grid"></div>
-    </section>
+    <details class="sec" id="sistemas" data-k="sistemas">
+      <summary><span class="t">Monitoramento de Sistemas</span><span class="res" id="sis-res"></span></summary>
+      <div class="body"><div class="grid" id="sis-grid"></div></div>
+    </details>
 
-    <section id="rede">
-      <h2>Equipamentos de Rede</h2>
-      <div class="grid" id="rede-grid"></div>
-    </section>
+    <details class="sec" id="rede" data-k="rede">
+      <summary><span class="t">Equipamentos de Rede</span><span class="res" id="rede-res"></span></summary>
+      <div class="body"><div class="grid" id="rede-grid"></div></div>
+    </details>
 
     <footer class="foot">Dados de demonstração · atualização automática a cada 60 s</footer>
   </main>

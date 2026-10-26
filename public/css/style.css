@@ -100,3 +100,31 @@ input:focus{outline:2px solid var(--brand);outline-offset:1px}
   .pill{display:none}
   h2{font-size:17px}
 }
+
+/* seções recolhíveis */
+.sec{margin-top:18px}
+details.sec{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:16px 18px;font-weight:700;font-size:17px;-webkit-tap-highlight-color:transparent}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary .t{display:flex;align-items:center;gap:10px}
+details.sec>summary .t::before{content:"";width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(-45deg);transition:transform .2s;flex:none}
+details.sec[open]>summary .t::before{transform:rotate(45deg)}
+details.sec>summary:hover{background:color-mix(in srgb,var(--brand) 8%,transparent)}
+details.sec[open]>summary{border-bottom:1px solid var(--line)}
+details.sec .body{padding:16px}
+.sec-t{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:17px;margin:0 0 12px}
+.res{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.mini{font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.mini.ok{background:#2ecc8f22;color:var(--ok)} .mini.parcial{background:#f5b94222;color:var(--parcial)} .mini.fora{background:#ff5c6c22;color:var(--fora)}
+.mini.zero{opacity:.45}
+.grp{font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin:4px 0 10px;display:flex;gap:8px;align-items:center}
+.grp+.grid{margin-bottom:18px} .grp span{background:var(--line);color:var(--txt);border-radius:99px;padding:1px 9px;font-size:12px}
+.grp.ok{color:var(--ok)} .grp.parcial{color:var(--parcial)} .grp.fora{color:var(--fora)}
+.lista{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:13.5px}
+.lista li{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;padding-top:6px;border-top:1px solid var(--line)}
+.lista li:first-child{border-top:0;padding-top:0}
+.lista small{color:var(--muted);margin-left:auto}
+.vazio{padding:22px;text-align:center;color:var(--ok);font-weight:600}
+@media (max-width:480px){ details.sec>summary{padding:14px;font-size:16px;flex-wrap:wrap} details.sec .body{padding:12px} }

@@ -3,10 +3,11 @@ if (!Auth.logado()) location.replace('index.html');
 const $ = (s, r = document) => r.querySelector(s);
 const ESTADO = { ok: 'No ar', parcial: 'Parcial', fora: 'Fora' };
 const ICO = { ok: '●', parcial: '▲', fora: '✕' };
-let dados = null, filtro = 'todas';
+let dados = null;
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const badge = st => `<span class="badge ${st}">${ICO[st]} ${ESTADO[st]}</span>`;
+const chip = (n, st, txt) => `<span class="mini ${st}${n ? '' : ' zero'}">${n} ${txt}</span>`;
 
 function desde(iso) {
   if (!iso) return '';
@@ -20,30 +21,58 @@ function kpi(rotulo, valor, sub, tom) {
   return `<div class="card kpi ${tom || ''}"><span>${esc(rotulo)}</span><b>${esc(valor)}</b><small>${esc(sub || '')}</small></div>`;
 }
 
-function render() {
-  const d = dados, vmsOn = d.vms.filter(v => v.estado === 'ok').length;
-  const sisProb = d.sistemas.filter(s => s.estado !== 'ok').length;
-  const uniFora = d.unidades.filter(u => u.estado === 'fora').length;
-  const r = d.rede;
-  $('#kpis').innerHTML =
-    kpi('VMs no ar', `${vmsOn}/${d.vms.length}`, 'servidores virtuais', vmsOn === d.vms.length ? 'ok' : 'parcial') +
-    kpi('Sistemas com problema', sisProb, `de ${d.sistemas.length} monitorados`, sisProb ? 'fora' : 'ok') +
-    kpi('Unidades fora', uniFora, `de ${d.unidades.length} unidades`, uniFora ? 'fora' : 'ok') +
-    kpi('Equipamentos fora', r.switches.fora + r.aps.fora, 'switches e APs', (r.switches.fora + r.aps.fora) ? 'parcial' : 'ok');
-
-  $('#vms-n').textContent = `${vmsOn}/${d.vms.length}`;
-  $('#vms-grid').innerHTML = d.vms.map(v => `
+function cartaoServidor(v) {
+  return `
     <article class="card item ${v.estado}">
       <header><h3>${esc(v.nome)}</h3>${badge(v.estado)}</header>
       <p class="muted">${esc(v.funcao)}</p>
+      ${v.estado === 'fora' ? '<small class="muted">sem resposta</small>' : `
       <div class="meters">
         <label>CPU <i style="--p:${v.cpu}"></i><em>${v.cpu}%</em></label>
         <label>RAM <i style="--p:${v.ram}"></i><em>${v.ram}%</em></label>
         <label>Disco <i style="--p:${v.disco}"></i><em>${v.disco}%</em></label>
-      </div>
-    </article>`).join('');
+      </div>`}
+    </article>`;
+}
 
-  $('#sis-n').textContent = `${d.sistemas.length - sisProb}/${d.sistemas.length} ok`;
+function grupo(titulo, st, lista, html) {
+  if (!lista.length) return '';
+  return `<h3 class="grp ${st}">${titulo} <span>${lista.length}</span></h3><div class="grid">${lista.map(html).join('')}</div>`;
+}
+
+function render() {
+  const d = dados, r = d.rede;
+  const srvOk = d.vms.filter(v => v.estado === 'ok'), srvPar = d.vms.filter(v => v.estado === 'parcial'), srvFora = d.vms.filter(v => v.estado === 'fora');
+  const sisProb = d.sistemas.filter(s => s.estado !== 'ok');
+  const uniProb = d.unidades.filter(u => u.estado !== 'ok');
+  const uniFora = d.unidades.filter(u => u.estado === 'fora').length;
+  const redeFora = r.switches.fora + r.aps.fora + r.ubiquiti.fora;
+
+  $('#kpis').innerHTML =
+    kpi('Unidades com problema', uniProb.length, `${uniFora} sem link · de ${d.unidades.length}`, uniProb.length ? 'fora' : 'ok') +
+    kpi('Servidores no ar', `${srvOk.length + srvPar.length}/${d.vms.length}`, `${srvFora.length} fora`, srvFora.length ? 'fora' : 'ok') +
+    kpi('Sistemas com problema', sisProb.length, `de ${d.sistemas.length} monitorados`, sisProb.length ? 'parcial' : 'ok') +
+    kpi('Equipamentos fora', redeFora, 'switches e APs', redeFora ? 'parcial' : 'ok');
+
+  // Unidades: sempre aberta, só o que está fora
+  $('#uni-res').innerHTML = chip(uniFora, 'fora', 'sem link') + chip(uniProb.length - uniFora, 'parcial', 'parcial');
+  $('#uni-body').innerHTML = uniProb.length ? `<div class="grid">${uniProb.map(u => `
+    <article class="card item ${u.estado}">
+      <header><h3>${esc(u.nome)}</h3>${badge(u.estado)}</header>
+      <ul class="lista">
+        ${u.mikrotik.estado === 'fora' ? `<li><b>Mikrotik</b> sem link <small>${desde(u.mikrotik.desde)}</small></li>` : ''}
+        ${u.equipamentos_fora.map(e => `<li><b>${esc(e.tipo)}</b> ${esc(e.nome)} <small>${desde(e.desde)}</small></li>`).join('')}
+      </ul>
+    </article>`).join('')}</div>`
+    : '<div class="card vazio">✓ Todas as unidades estão no ar</div>';
+
+  // Servidores
+  $('#srv-res').innerHTML = chip(srvOk.length, 'ok', 'no ar') + chip(srvPar.length, 'parcial', 'alerta') + chip(srvFora.length, 'fora', 'fora');
+  $('#srv-body').innerHTML =
+    grupo('Fora', 'fora', srvFora, cartaoServidor) + grupo('Com alerta', 'parcial', srvPar, cartaoServidor) + grupo('No ar', 'ok', srvOk, cartaoServidor);
+
+  // Sistemas
+  $('#sis-res').innerHTML = chip(d.sistemas.length - sisProb.length, 'ok', 'ok') + chip(sisProb.length, sisProb.length ? 'parcial' : 'ok', 'com problema');
   $('#sis-grid').innerHTML = d.sistemas.map(s => `
     <article class="card item ${s.estado}">
       <header><h3>${esc(s.nome)}</h3>${badge(s.estado)}</header>
@@ -51,8 +80,8 @@ function render() {
       <small class="muted">${s.latencia_ms != null ? `${s.latencia_ms} ms` : 'sem resposta'}${s.desde ? ' · ' + desde(s.desde) : ''}</small>
     </article>`).join('');
 
-  renderUnidades();
-
+  // Rede
+  $('#rede-res').innerHTML = chip(redeFora, redeFora ? 'parcial' : 'ok', 'fora');
   const linha = (t, o) => `
     <article class="card item ${o.fora ? 'parcial' : 'ok'}">
       <header><h3>${t}</h3>${badge(o.fora ? 'parcial' : 'ok')}</header>
@@ -70,18 +99,6 @@ function render() {
   av.textContent = `Atenção: os dados têm ${Math.round(idade)} min. O envio da rede interna pode estar parado.`;
 }
 
-function renderUnidades() {
-  const q = $('#busca').value.trim().toLowerCase();
-  const lista = dados.unidades.filter(u =>
-    (filtro === 'todas' || u.estado === filtro) && u.nome.toLowerCase().includes(q));
-  $('#uni-n').textContent = `${dados.unidades.filter(u => u.estado === 'ok').length}/${dados.unidades.length} no ar`;
-  $('#uni-grid').innerHTML = lista.length ? lista.map(u => `
-    <article class="card item ${u.estado}">
-      <header><h3>${esc(u.nome)}</h3>${badge(u.estado)}</header>
-      <small class="muted">${u.estado === 'ok' ? 'tudo normal' : `${esc(u.motivo)} · ${desde(u.desde)}`}</small>
-    </article>`).join('') : '<p class="muted">Nenhuma unidade encontrada.</p>';
-}
-
 async function carregar() {
   try {
     const r = await fetch('data/status.json?t=' + Date.now(), { cache: 'no-store' });
@@ -93,18 +110,22 @@ async function carregar() {
   }
 }
 
-$('#sair').addEventListener('click', Auth.sair);
-$('#busca').addEventListener('input', () => dados && renderUnidades());
-$('#filtro').addEventListener('click', e => {
-  const b = e.target.closest('.chip'); if (!b) return;
-  filtro = b.dataset.f;
-  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
-  dados && renderUnidades();
+// lembra quais seções o usuário deixou abertas
+const lembrar = (k, v) => { try { v === undefined ? localStorage.getItem('painel.' + k) : localStorage.setItem('painel.' + k, v); } catch (e) {} };
+const lido = k => { try { return localStorage.getItem('painel.' + k); } catch (e) { return null; } };
+document.querySelectorAll('details.sec').forEach(el => {
+  if (lido(el.dataset.k) === '1') el.open = true;
+  el.addEventListener('toggle', () => lembrar(el.dataset.k, el.open ? '1' : '0'));
 });
+
+// aba abre a seção correspondente
 document.querySelectorAll('#tabs a').forEach(a => a.addEventListener('click', () => {
   document.querySelectorAll('#tabs a').forEach(x => x.classList.toggle('on', x === a));
+  const alvo = document.querySelector(a.getAttribute('href'));
+  if (alvo && alvo.tagName === 'DETAILS') alvo.open = true;
 }));
 
+$('#sair').addEventListener('click', Auth.sair);
 carregar();
 setInterval(carregar, 60000);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
