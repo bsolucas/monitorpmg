@@ -162,3 +162,5 @@ details.sub>summary .r-t{flex:1;min-width:120px}
 details.sub[open]>summary{border-bottom:1px solid var(--line)}
 details.sub .rows{margin:0;padding:4px 12px}
 .grau{font-variant-numeric:tabular-nums}
+
+.sub-t{margin:10px 12px 0;font-size:12px;text-transform:uppercase;letter-spacing:.06em;opacity:.7}

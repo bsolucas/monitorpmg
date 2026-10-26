@@ -385,6 +385,48 @@
      "valor": 20,
      "estado": "Green"
     }
+   ],
+   "vms": [
+    {
+     "nome": "SRVWBKP",
+     "estado": "ok",
+     "vcpu": 8,
+     "ram_gb": 16,
+     "ram": 24,
+     "cpu": 8
+    },
+    {
+     "nome": "SRVWCLAUDE",
+     "estado": "ok",
+     "vcpu": 2,
+     "ram_gb": 4,
+     "ram": 37,
+     "cpu": 4
+    },
+    {
+     "nome": "SRVWGEOH01",
+     "estado": "ok",
+     "vcpu": 4,
+     "ram_gb": 8,
+     "ram": 28,
+     "cpu": 3
+    },
+    {
+     "nome": "SRVWMGR01",
+     "estado": "ok",
+     "vcpu": 8,
+     "ram_gb": 16,
+     "ram": 18,
+     "cpu": 1
+    },
+    {
+     "nome": "SRVWTVM",
+     "estado": "ok",
+     "vcpu": 2,
+     "ram_gb": 4,
+     "ram": 1,
+     "cpu": 0
+    }
    ]
   },
   {
@@ -445,6 +487,32 @@
      "valor": 32,
      "estado": "Green"
     }
+   ],
+   "vms": [
+    {
+     "nome": "SRVLMGR01",
+     "estado": "ok",
+     "vcpu": 4,
+     "ram_gb": 6,
+     "ram": 7,
+     "cpu": 1
+    },
+    {
+     "nome": "SRVVC01",
+     "estado": "ok",
+     "vcpu": 2,
+     "ram_gb": 16,
+     "ram": 19,
+     "cpu": 9
+    },
+    {
+     "nome": "SRVWDC01",
+     "estado": "ok",
+     "vcpu": 4,
+     "ram_gb": 12,
+     "ram": 28,
+     "cpu": 11
+    }
    ]
   },
   {
@@ -504,6 +572,32 @@
      "nome": "Ambiente Temp",
      "valor": 18,
      "estado": "Green"
+    }
+   ],
+   "vms": [
+    {
+     "nome": "SRVLMDR01",
+     "estado": "ok",
+     "vcpu": 8,
+     "ram_gb": 12,
+     "ram": 29,
+     "cpu": 13
+    },
+    {
+     "nome": "SRVWDC02",
+     "estado": "ok",
+     "vcpu": 4,
+     "ram_gb": 12,
+     "ram": 22,
+     "cpu": 9
+    },
+    {
+     "nome": "SRVWFS01",
+     "estado": "ok",
+     "vcpu": 8,
+     "ram_gb": 16,
+     "ram": 18,
+     "cpu": 3
     }
    ]
   }

@@ -141,12 +141,20 @@ def esxi():
         return []
     ordem = {'Green': 0, 'Unknown': 0, 'Yellow': 1, 'Red': 2}
     hosts = []
+    try:  # VMs agrupadas pelo moid do host
+        vms = collections.defaultdict(list)
+        for v in json.loads(govc('vm.info', '-json', *filter(None, govc('find', '/', '-type', 'm').split('\n')))).get('virtualMachines', []):
+            vms[v['runtime']['host']['value']].append(v)
+    except Exception as e:
+        print('esxi (vms): ' + str(e), file=sys.stderr)
+        vms = {}
     for c in filter(None, caminhos):
         nome = c.rsplit('/', 1)[-1].split('.')[0].upper()
         try:
             props = {o['name']: o['val'] for o in json.loads(govc('object.collect', '-json', c,
                      'runtime.healthSystemRuntime.systemHealthInfo', 'summary.runtime.connectionState',
-                     'summary.hardware.model'))}
+                     'summary.hardware.model', 'summary.hardware.cpuMhz'))}
+            moid = govc('find', '-i', '/', '-type', 'h', '-name', c.rsplit('/', 1)[-1]).strip().split(':')[-1]
         except Exception:
             hosts.append({'nome': nome, 'estado': 'fora', 'temps': {}})
             continue
@@ -167,9 +175,22 @@ def esxi():
         t = {'ambiente': pega('Ambient'), 'exaustao': pega('Exhaust'), 'cpu1': pega('CPU 1'), 'cpu2': pega('CPU 2'),
              'memoria': pega('DIMM'), 'pch': pega('PCH')}
         online = props.get('summary.runtime.connectionState') == 'connected'
+        mhz = props.get('summary.hardware.cpuMhz') or 0
+        lista_vm = []
+        for v in sorted(vms.get(moid, []), key=lambda x: x['name'].lower()):
+            sm = v['summary']
+            q = sm.get('quickStats', {})
+            ligada = v['runtime']['powerState'] == 'poweredOn'
+            ncpu, mem = sm['config']['numCpu'], sm['config']['memorySizeMB']
+            item = {'nome': v['name'], 'estado': 'ok' if ligada else 'fora', 'vcpu': ncpu, 'ram_gb': round(mem / 1024)}
+            if ligada:
+                item['ram'] = min(100, round(q.get('guestMemoryUsage', 0) / mem * 100))
+                if mhz:
+                    item['cpu'] = min(100, round(q.get('overallCpuUsage', 0) / (ncpu * mhz) * 100))
+            lista_vm.append(item)
         hosts.append({'nome': nome, 'modelo': props.get('summary.hardware.model'),
                       'estado': 'fora' if not online else ('parcial' if pior else 'ok'),
-                      'temps': {k: v for k, v in t.items() if v is not None}, 'sensores': sensores})
+                      'temps': {k: v for k, v in t.items() if v is not None}, 'sensores': sensores, 'vms': lista_vm})
     return hosts
 
 

@@ -88,13 +88,17 @@ function render() {
   const ex = d.esxi || [];
   $('#esxi').hidden = !ex.length;
   const eOk = ex.filter(h => h.estado === 'ok').length, eFora = ex.filter(h => h.estado === 'fora').length, ePar = ex.length - eOk - eFora;
-  $('#esxi-res').innerHTML = mini(eOk, 'ok', 'normal') + (ePar ? mini(ePar, 'parcial', 'quente') : '') + (eFora ? mini(eFora, 'fora', 'fora') : '');
+  $('#esxi-res').innerHTML = mini(ex.reduce((n, h) => n + (h.vms || []).filter(v => v.estado === 'ok').length, 0), 'ok', 'VMs ligadas') + (ex.some(h => (h.vms || []).some(v => v.estado === 'fora')) ? mini(ex.reduce((n, h) => n + (h.vms || []).filter(v => v.estado === 'fora').length, 0), 'fora', 'VMs desligadas') : '') + mini(eOk, 'ok', 'hosts normais') + (ePar ? mini(ePar, 'parcial', 'quente') : '') + (eFora ? mini(eFora, 'fora', 'fora') : '');
   const ROT = { ambiente: 'Ambiente', exaustao: 'Exaustão', cpu1: 'CPU 1', cpu2: 'CPU 2', memoria: 'Memória', pch: 'Chipset' };
   const grau = (k, v) => `<span class="temp ${v >= (k === 'ambiente' ? 35 : k === 'exaustao' ? 45 : 80) ? 'fora' : v >= (k === 'ambiente' ? 30 : k === 'exaustao' ? 40 : 70) ? 'parcial' : 'ok'}"><small>${ROT[k]}</small><b>${v}°C</b></span>`;
   $('#esxi-body').innerHTML = ex.map(h => `
     <details class="sub ${h.estado}" data-h="${esc(h.nome)}"${esxiAberto.has(h.nome) ? ' open' : ''}>
-      <summary><i class="dot ${h.estado}"></i><span class="r-t"><b>${esc(h.nome)}</b><small>${h.estado === 'fora' ? 'sem resposta' : esc(h.modelo || '')}</small></span>
+      <summary><i class="dot ${h.estado}"></i><span class="r-t"><b>${esc(h.nome)}</b><small>${h.estado === 'fora' ? 'sem resposta' : esc(h.modelo || '')}${(h.vms || []).length ? ` · ${h.vms.filter(v => v.estado === 'ok').length}/${h.vms.length} VMs ligadas` : ''}</small></span>
         <span class="temps">${['ambiente', 'cpu1', 'cpu2'].filter(k => h.temps && h.temps[k] != null).map(k => grau(k, h.temps[k])).join('')}</span></summary>
+      ${(h.vms || []).length ? `<h4 class="sub-t">Máquinas virtuais</h4><ul class="rows">${h.vms.map(v => `<li class="${v.estado}"><i class="dot ${v.estado}"></i>
+        <span class="r-t"><b>${esc(v.nome)}</b><small>${v.estado === 'fora' ? 'desligada' : `ligada · ${v.vcpu} vCPU · ${v.ram_gb} GB`}</small></span>
+        <span class="barras">${v.estado === 'fora' ? '<span class="tag fora">Desligada</span>' : barra('CPU', v.cpu) + barra('RAM', v.ram)}</span></li>`).join('')}</ul>` : ''}
+      <h4 class="sub-t">Temperaturas</h4>
       <ul class="rows">${(h.sensores || []).map(x => `<li><i class="dot ${x.estado === 'Green' || x.estado === 'Unknown' ? 'ok' : x.estado === 'Yellow' ? 'parcial' : 'fora'}"></i>
         <span class="r-t"><b>${esc(x.nome)}</b></span><b class="grau">${x.valor}°C</b></li>`).join('') || '<li class="muted">Sem leitura de sensores.</li>'}</ul>
     </details>`).join('');
