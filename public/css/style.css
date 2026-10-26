@@ -147,3 +147,18 @@ dialog#dica-instalar .btn{width:100%}
 
 .brand.sm{min-width:0}.brand.sm strong{overflow:hidden;text-overflow:ellipsis}
 @media (max-width:480px){.brand.sm strong{white-space:normal;font-size:14px;line-height:1.15;overflow:visible}}
+
+.temps{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.temp{display:flex;flex-direction:column;align-items:center;min-width:64px;padding:4px 8px;border-radius:8px;background:var(--line)}
+.temp small{font-size:10px;opacity:.75}
+.temp b{font-size:15px}
+.temp.ok b{color:var(--ok)}.temp.parcial b{color:var(--parcial)}.temp.fora b{color:var(--fora)}
+@media (max-width:640px){.temps{width:100%;justify-content:flex-start}}
+
+details.sub{border:1px solid var(--line);border-radius:12px;margin:0 0 8px;overflow:hidden}
+details.sub>summary{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;list-style:none;flex-wrap:wrap}
+details.sub>summary::-webkit-details-marker{display:none}
+details.sub>summary .r-t{flex:1;min-width:120px}
+details.sub[open]>summary{border-bottom:1px solid var(--line)}
+details.sub .rows{margin:0;padding:4px 12px}
+.grau{font-variant-numeric:tabular-nums}

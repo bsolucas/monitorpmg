@@ -7,7 +7,7 @@ Config por variáveis de ambiente:
   INGEST_TOKEN                  token de envio (só com --post)
 O JSON leva apenas nomes e estados: nunca IPs, MACs ou credenciais.
 """
-import argparse, collections, datetime as dt, difflib, json, os, re, sys, unicodedata, urllib.request
+import argparse, collections, datetime as dt, difflib, json, os, re, subprocess, sys, unicodedata, urllib.request
 
 G_MIKROTIK, G_SERVIDORES = '22', '38'
 G_EQUIP = {'switches': '44', 'aps': '45', 'ubiquiti': '46'}
@@ -126,7 +126,51 @@ def coletar(url, user, pw):
                          'estado': 'ok' if it['lastvalue'] in ('0', '') else 'parcial', 'desde': None})
 
     return {'gerado_em': iso(dt.datetime.now(dt.timezone.utc).timestamp()),
-            'vms': servidores, 'sistemas': sistemas, 'unidades': lista_un, 'rede': totais}
+            'vms': servidores, 'esxi': esxi(), 'sistemas': sistemas, 'unidades': lista_un, 'rede': totais}
+
+
+def esxi():
+    """Hosts ESXi e temperaturas dos sensores, via govc (GOVC_URL/GOVC_USERNAME/GOVC_PASSWORD/GOVC_INSECURE).
+    Sem govc ou sem acesso ao vCenter devolve lista vazia (o resto do painel continua)."""
+    def govc(*a):
+        return subprocess.run(['govc', *a], capture_output=True, text=True, timeout=60, check=True).stdout
+    try:
+        caminhos = sorted(govc('find', '/', '-type', 'h').split('\n'))
+    except Exception as e:
+        print('esxi: ' + str(e), file=sys.stderr)
+        return []
+    ordem = {'Green': 0, 'Unknown': 0, 'Yellow': 1, 'Red': 2}
+    hosts = []
+    for c in filter(None, caminhos):
+        nome = c.rsplit('/', 1)[-1].split('.')[0].upper()
+        try:
+            props = {o['name']: o['val'] for o in json.loads(govc('object.collect', '-json', c,
+                     'runtime.healthSystemRuntime.systemHealthInfo', 'summary.runtime.connectionState',
+                     'summary.hardware.model'))}
+        except Exception:
+            hosts.append({'nome': nome, 'estado': 'fora', 'temps': {}})
+            continue
+        temps, sensores, pior = [], [], 0
+        for sn in props.get('runtime.healthSystemRuntime.systemHealthInfo', {}).get('numericSensorInfo', []):
+            if sn.get('sensorType') != 'temperature' or sn.get('baseUnits') != 'degrees C' \
+                    or 'DTS' in sn['name'] or sn['name'].lower().endswith('overtemp'):
+                continue
+            pior = max(pior, ordem.get(sn['healthState']['key'], 0))
+            temps.append((sn['name'], round(sn['currentReading'] * 10 ** sn['unitModifier'])))
+            sensores.append({'nome': re.sub(r'^(Memory Device|Processor/IO Module|Processor|Add-in Card|External Environment) \d+ ', '', sn['name'])
+                             .replace('Ambient', 'Ambiente').replace('Exhaust', 'Exaustão'),
+                             'valor': temps[-1][1], 'estado': sn['healthState']['key']})
+
+        def pega(*chaves):
+            v = [t for n, t in temps if any(k in n for k in chaves)]
+            return max(v) if v else None
+        t = {'ambiente': pega('Ambient'), 'exaustao': pega('Exhaust'), 'cpu1': pega('CPU 1'), 'cpu2': pega('CPU 2'),
+             'memoria': pega('DIMM'), 'pch': pega('PCH')}
+        online = props.get('summary.runtime.connectionState') == 'connected'
+        hosts.append({'nome': nome, 'modelo': props.get('summary.hardware.model'),
+                      'estado': 'fora' if not online else ('parcial' if pior else 'ok'),
+                      'temps': {k: v for k, v in t.items() if v is not None}, 'sensores': sensores})
+    return hosts
 
 
 def main():
@@ -143,7 +187,7 @@ def main():
                                      'Authorization': 'Bearer ' + os.environ['INGEST_TOKEN']})
         urllib.request.urlopen(req, timeout=30).read()
     print(f"ok: {len(d['unidades'])} unidades ({sum(u['estado']!='ok' for u in d['unidades'])} com problema), "
-          f"{len(d['vms'])} servidores, {len(d['sistemas'])} sistemas", file=sys.stderr)
+          f"{len(d['vms'])} servidores, {len(d['esxi'])} ESXi, {len(d['sistemas'])} sistemas", file=sys.stderr)
 
 
 if __name__ == '__main__':

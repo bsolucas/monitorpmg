@@ -325,5 +325,187 @@
    "on": 86,
    "fora": 1
   }
- }
+ },
+ "esxi": [
+  {
+   "nome": "SRVVM01",
+   "modelo": "ThinkSystem SR650 V2",
+   "estado": "ok",
+   "temps": {
+    "ambiente": 20,
+    "exaustao": 27,
+    "cpu1": 34,
+    "cpu2": 35,
+    "memoria": 37,
+    "pch": 36
+   },
+   "sensores": [
+    {
+     "nome": "PCH Temp",
+     "valor": 36,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 23 Temp",
+     "valor": 37,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 19 Temp",
+     "valor": 36,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 7 Temp",
+     "valor": 34,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 3 Temp",
+     "valor": 34,
+     "estado": "Green"
+    },
+    {
+     "nome": "CPU 2 Temp",
+     "valor": 35,
+     "estado": "Green"
+    },
+    {
+     "nome": "CPU 1 Temp",
+     "valor": 34,
+     "estado": "Green"
+    },
+    {
+     "nome": "Exaustão Temp",
+     "valor": 27,
+     "estado": "Green"
+    },
+    {
+     "nome": "Ambiente Temp",
+     "valor": 20,
+     "estado": "Green"
+    }
+   ]
+  },
+  {
+   "nome": "SRVVM02",
+   "modelo": "ThinkSystem SR650 V2",
+   "estado": "ok",
+   "temps": {
+    "ambiente": 32,
+    "exaustao": 37,
+    "cpu1": 41,
+    "cpu2": 43,
+    "memoria": 38,
+    "pch": 44
+   },
+   "sensores": [
+    {
+     "nome": "PCH Temp",
+     "valor": 44,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 23 Temp",
+     "valor": 38,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 19 Temp",
+     "valor": 36,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 7 Temp",
+     "valor": 35,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 3 Temp",
+     "valor": 36,
+     "estado": "Green"
+    },
+    {
+     "nome": "CPU 2 Temp",
+     "valor": 43,
+     "estado": "Green"
+    },
+    {
+     "nome": "CPU 1 Temp",
+     "valor": 41,
+     "estado": "Green"
+    },
+    {
+     "nome": "Exaustão Temp",
+     "valor": 37,
+     "estado": "Green"
+    },
+    {
+     "nome": "Ambiente Temp",
+     "valor": 32,
+     "estado": "Green"
+    }
+   ]
+  },
+  {
+   "nome": "SRVVM03",
+   "modelo": "ThinkSystem SR650 V2",
+   "estado": "ok",
+   "temps": {
+    "ambiente": 18,
+    "exaustao": 25,
+    "cpu1": 32,
+    "cpu2": 36,
+    "memoria": 39,
+    "pch": 37
+   },
+   "sensores": [
+    {
+     "nome": "PCH Temp",
+     "valor": 37,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 23 Temp",
+     "valor": 39,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 19 Temp",
+     "valor": 38,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 7 Temp",
+     "valor": 37,
+     "estado": "Green"
+    },
+    {
+     "nome": "DIMM 3 Temp",
+     "valor": 38,
+     "estado": "Green"
+    },
+    {
+     "nome": "CPU 2 Temp",
+     "valor": 36,
+     "estado": "Green"
+    },
+    {
+     "nome": "CPU 1 Temp",
+     "valor": 32,
+     "estado": "Green"
+    },
+    {
+     "nome": "Exaustão Temp",
+     "valor": 25,
+     "estado": "Green"
+    },
+    {
+     "nome": "Ambiente Temp",
+     "valor": 18,
+     "estado": "Green"
+    }
+   ]
+  }
+ ]
 }
