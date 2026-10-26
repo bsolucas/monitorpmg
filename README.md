@@ -9,9 +9,28 @@ Lê `public/data/status.json`. Por enquanto os dados são de **demonstração**.
 - `collector/` — (a fazer) script na rede interna que lê o Zabbix e envia o JSON por HTTPS de saída
 - `api/` — (a fazer) funções Vercel que recebem o JSON (com token) e entregam ao site
 
-## Rodar localmente
-`cd public && python3 -m http.server 8080` e abrir http://localhost:8080 (login provisório: admin / admin)
+## Como funciona
+```
+Zabbix -> collector/collector.py (VM interna, cron 1 min) --HTTPS de saida--> /api/ingest (Vercel) -> Upstash Redis
+navegador -> /api/login (cookie HttpOnly) -> /api/status -> painel
+```
+Nenhuma porta da rede interna e aberta. O JSON leva so nomes e estados (sem IP/MAC/credenciais).
 
-## Segurança (antes de usar dados reais)
-O login admin/admin é só do navegador e **não protege nada**. Para dados reais: autenticação no servidor
-(função em `api/`), JSON sem IPs/credenciais, token de envio só na VM, repositório privado.
+## Configurar na Vercel (Settings -> Environment Variables)
+| Variavel | Valor |
+|---|---|
+| `PAINEL_USER` / `PAINEL_PASS` | login do painel (senha forte) |
+| `SESSION_SECRET` | texto aleatorio longo (ex.: `openssl rand -hex 32`) |
+| `INGEST_TOKEN` | token aleatorio longo, o mesmo usado no coletor |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | criados ao adicionar Upstash Redis (Storage / Marketplace) |
+
+## Coletor (na VM interna)
+`ZBX_URL`, `ZBX_USER`, `ZBX_PASS`, `INGEST_TOKEN` no ambiente (arquivo `.env` com chmod 600, fora do git) e:
+`python3 collector/collector.py --post https://SEU-SITE.vercel.app/api/ingest`
+Cron: `* * * * * set -a; . /caminho/.env; set +a; python3 /caminho/collector/collector.py --post URL`
+
+## Teste local (sem backend, dados de demonstracao)
+`cd public && python3 -m http.server 8080` e abrir http://localhost:8080 (modo demo: admin / admin)
+
+## Seguranca
+Repositorio privado; coletor com usuario Zabbix somente leitura; trocar `INGEST_TOKEN` se vazar.

@@ -25,11 +25,11 @@
   </main>
   <script src="js/auth.js"></script>
   <script>
-    if (Auth.logado()) location.replace('painel.html');
-    document.getElementById('login').addEventListener('submit', e => {
+    document.getElementById('login').addEventListener('submit', async e => {
       e.preventDefault();
-      if (Auth.entrar(user.value.trim(), pass.value)) location.replace('painel.html');
-      else document.getElementById('erro').hidden = false;
+      const b = e.submitter; b.disabled = true;
+      if (await Auth.entrar(user.value.trim(), pass.value)) location.replace('painel.html');
+      else { document.getElementById('erro').hidden = false; b.disabled = false; }
     });
   </script>
 </body>

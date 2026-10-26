@@ -1,5 +1,3 @@
-if (!Auth.logado()) location.replace('index.html');
-
 const $ = (s, r = document) => r.querySelector(s);
 const ESTADO = { ok: 'No ar', parcial: 'Parcial', fora: 'Fora' };
 const ICO = { ok: '●', parcial: '▲', fora: '✕' };
@@ -25,13 +23,10 @@ function cartaoServidor(v) {
   return `
     <article class="card item ${v.estado}">
       <header><h3>${esc(v.nome)}</h3>${badge(v.estado)}</header>
-      <p class="muted">${esc(v.funcao)}</p>
+      ${v.funcao ? `<p class="muted">${esc(v.funcao)}</p>` : ''}
       ${v.estado === 'fora' ? '<small class="muted">sem resposta</small>' : `
-      <div class="meters">
-        <label>CPU <i style="--p:${v.cpu}"></i><em>${v.cpu}%</em></label>
-        <label>RAM <i style="--p:${v.ram}"></i><em>${v.ram}%</em></label>
-        <label>Disco <i style="--p:${v.disco}"></i><em>${v.disco}%</em></label>
-      </div>`}
+      <div class="meters">${[['CPU', v.cpu], ['RAM', v.ram], ['Disco', v.disco]].filter(m => m[1] != null)
+        .map(m => `<label>${m[0]} <i style="--p:${m[1]}"></i><em>${m[1]}%</em></label>`).join('')}</div>`}
     </article>`;
 }
 
@@ -101,7 +96,13 @@ function render() {
 
 async function carregar() {
   try {
-    const r = await fetch('data/status.json?t=' + Date.now(), { cache: 'no-store' });
+    let r = await fetch('/api/status', { cache: 'no-store' }).catch(() => ({ status: 404 }));
+    if (r.status === 401) return location.replace('index.html');
+    if (r.status === 404 || r.status === 501) { // sem backend (teste local): dados de demonstração
+      if (!Auth.demo()) return location.replace('index.html');
+      r = await fetch('data/status.json?t=' + Date.now(), { cache: 'no-store' });
+    }
+    if (r.status === 204) throw new Error('ainda sem dados');
     if (!r.ok) throw new Error(r.status);
     dados = await r.json();
     render();
