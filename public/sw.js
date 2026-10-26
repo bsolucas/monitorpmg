@@ -1,5 +1,5 @@
 // Cache só da "casca" do app. O status.json nunca é cacheado (sempre rede).
-const V = 'painel-v3';
+const V = 'painel-v4';
 const CASCA = ['index.html','painel.html','css/style.css','js/app.js','js/auth.js','js/pwa.js','icons/icon-192.png','manifest.webmanifest','icons/icon.svg'];
 self.addEventListener('install', e => e.waitUntil(caches.open(V).then(c => c.addAll(CASCA))));
 self.addEventListener('activate', e => e.waitUntil(

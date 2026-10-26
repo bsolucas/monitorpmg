@@ -1,4 +1,4 @@
-# Painel de Status · Guaíba
+# Monitoramento Prefeitura (Guaíba)
 
 Site estático (HTML + CSS + JS, PWA) que mostra o status de VMs, sistemas, unidades e equipamentos de rede.
 Lê `public/data/status.json`. Por enquanto os dados são de **demonstração**.

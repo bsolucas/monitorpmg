@@ -144,3 +144,6 @@ dialog#dica-instalar .btn{width:100%}
 @media (max-width:640px){.pill{display:none}}
 .brand.sm strong,.btn.instalar,.btn.ghost{white-space:nowrap}
 @media (max-width:400px){.brand.sm strong{font-size:15px}.brand.sm img{width:26px;height:26px}.top-right{gap:6px}}
+
+.brand.sm{min-width:0}.brand.sm strong{overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){.brand.sm strong{white-space:normal;font-size:14px;line-height:1.15;overflow:visible}}
