@@ -1,0 +1,258 @@
+{
+ "gerado_em": "2026-10-26T13:48:03Z",
+ "vms": [
+  {
+   "nome": "SRVMAIL01",
+   "funcao": "Zimbra (e-mail)",
+   "estado": "ok",
+   "cpu": 34,
+   "ram": 71,
+   "disco": 86
+  },
+  {
+   "nome": "SRVWDC01",
+   "funcao": "Controlador de domínio",
+   "estado": "ok",
+   "cpu": 8,
+   "ram": 42,
+   "disco": 38
+  },
+  {
+   "nome": "SRVWDC02",
+   "funcao": "Controlador de domínio / DHCP visitantes",
+   "estado": "ok",
+   "cpu": 11,
+   "ram": 45,
+   "disco": 41
+  },
+  {
+   "nome": "SRVWDC03",
+   "funcao": "Controlador de domínio",
+   "estado": "ok",
+   "cpu": 6,
+   "ram": 39,
+   "disco": 35
+  },
+  {
+   "nome": "SRVWDESK",
+   "funcao": "RustDesk",
+   "estado": "ok",
+   "cpu": 5,
+   "ram": 28,
+   "disco": 22
+  },
+  {
+   "nome": "SRVWTVM",
+   "funcao": "Portal Acesso Guaíba",
+   "estado": "ok",
+   "cpu": 4,
+   "ram": 14,
+   "disco": 5
+  },
+  {
+   "nome": "SRVWESUS",
+   "funcao": "Atualizações Windows",
+   "estado": "ok",
+   "cpu": 9,
+   "ram": 52,
+   "disco": 61
+  },
+  {
+   "nome": "SRVSAUDE01",
+   "funcao": "Sistema de Saúde",
+   "estado": "parcial",
+   "cpu": 78,
+   "ram": 83,
+   "disco": 74
+  },
+  {
+   "nome": "SRVWWEB",
+   "funcao": "Servidores web",
+   "estado": "ok",
+   "cpu": 17,
+   "ram": 47,
+   "disco": 52
+  },
+  {
+   "nome": "SRVPACS01",
+   "funcao": "Imagens PACS",
+   "estado": "fora",
+   "cpu": 0,
+   "ram": 0,
+   "disco": 0
+  }
+ ],
+ "sistemas": [
+  {
+   "nome": "E-mail Zimbra",
+   "detalhe": "Webmail e SMTP",
+   "estado": "ok",
+   "latencia_ms": 120,
+   "desde": null
+  },
+  {
+   "nome": "Active Directory",
+   "detalhe": "Autenticação do domínio",
+   "estado": "ok",
+   "latencia_ms": 8,
+   "desde": null
+  },
+  {
+   "nome": "GLPI",
+   "detalhe": "Chamados de TI",
+   "estado": "ok",
+   "latencia_ms": 210,
+   "desde": null
+  },
+  {
+   "nome": "Zabbix",
+   "detalhe": "Monitoramento",
+   "estado": "ok",
+   "latencia_ms": 95,
+   "desde": null
+  },
+  {
+   "nome": "RustDesk",
+   "detalhe": "Acesso remoto",
+   "estado": "ok",
+   "latencia_ms": 60,
+   "desde": null
+  },
+  {
+   "nome": "Internet (Unifique)",
+   "detalhe": "Link principal",
+   "estado": "ok",
+   "latencia_ms": 14,
+   "desde": null
+  },
+  {
+   "nome": "Sistema Tributário",
+   "detalhe": "Aplicação web",
+   "estado": "parcial",
+   "latencia_ms": 1480,
+   "desde": "2026-10-26T13:13:03Z"
+  },
+  {
+   "nome": "Portal da Transparência",
+   "detalhe": "Site público",
+   "estado": "ok",
+   "latencia_ms": 320,
+   "desde": null
+  }
+ ],
+ "unidades": [
+  {
+   "nome": "Prefeitura Central",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "Gabinete da Prefeita",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "UBS Centro",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "UBS Colina",
+   "estado": "fora",
+   "motivo": "Sem link",
+   "desde": "2026-10-26T11:26:03Z"
+  },
+  {
+   "nome": "UBS Vila Nova",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "Escola Municipal Aurora",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "Escola Municipal Horizonte",
+   "estado": "parcial",
+   "motivo": "Switch fora",
+   "desde": "2026-10-26T12:51:03Z"
+  },
+  {
+   "nome": "CRAS Norte",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "CRAS Sul",
+   "estado": "fora",
+   "motivo": "Link down",
+   "desde": "2026-10-26T13:25:03Z"
+  },
+  {
+   "nome": "Secretaria de Obras",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "Secretaria de Educação",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "Secretaria de Saúde",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "Guarda Municipal",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "Biblioteca Municipal",
+   "estado": "parcial",
+   "motivo": "AP fora",
+   "desde": "2026-10-26T08:38:03Z"
+  },
+  {
+   "nome": "Hospital Municipal",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  },
+  {
+   "nome": "Câmara de Vereadores",
+   "estado": "ok",
+   "motivo": "",
+   "desde": null
+  }
+ ],
+ "rede": {
+  "switches": {
+   "total": 178,
+   "on": 175,
+   "fora": 3
+  },
+  "aps": {
+   "total": 153,
+   "on": 149,
+   "fora": 4
+  },
+  "ubiquiti": {
+   "total": 87,
+   "on": 86,
+   "fora": 1
+  }
+ }
+}

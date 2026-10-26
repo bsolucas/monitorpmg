@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel de Status · Guaíba</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+  <main class="login-wrap">
+    <form id="login" class="card login-card" autocomplete="on">
+      <div class="brand">
+        <img src="icons/icon.svg" alt="" width="44" height="44">
+        <div><h1>Painel de Status</h1><p>Prefeitura de Guaíba · TI</p></div>
+      </div>
+      <label>Usuário<input id="user" name="username" autocomplete="username" required autofocus></label>
+      <label>Senha<input id="pass" name="password" type="password" autocomplete="current-password" required></label>
+      <p id="erro" class="erro" role="alert" hidden>Usuário ou senha inválidos.</p>
+      <button type="submit" class="btn">Entrar</button>
+    </form>
+  </main>
+  <script src="js/auth.js"></script>
+  <script>
+    if (Auth.logado()) location.replace('painel.html');
+    document.getElementById('login').addEventListener('submit', e => {
+      e.preventDefault();
+      if (Auth.entrar(user.value.trim(), pass.value)) location.replace('painel.html');
+      else document.getElementById('erro').hidden = false;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "Painel de Status Guaíba",
+  "short_name": "Status",
+  "start_url": "painel.html",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "lang": "pt-BR",
+  "icons": [{ "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
