@@ -133,7 +133,7 @@ def esxi():
     """Hosts ESXi e temperaturas dos sensores, via govc (GOVC_URL/GOVC_USERNAME/GOVC_PASSWORD/GOVC_INSECURE).
     Sem govc ou sem acesso ao vCenter devolve lista vazia (o resto do painel continua)."""
     def govc(*a):
-        return subprocess.run(['govc', *a], capture_output=True, text=True, timeout=60, check=True).stdout
+        return subprocess.run(['/usr/local/bin/govc', *a], capture_output=True, text=True, timeout=60, check=True).stdout
     try:
         caminhos = sorted(govc('find', '/', '-type', 'h').split('\n'))
     except Exception as e:
